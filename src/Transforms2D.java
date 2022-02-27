@@ -25,10 +25,9 @@ public class Transforms2D extends JPanel  {
             int whichTransform = transformSelect.getSelectedIndex();
 
             // TODO Apply transforms here, depending on the value of whichTransform!
-            Polygon pentagon=new Polygon(new int[] {200,400,460,300,140}, new int[]{450,450,270,150,270},5);
             Polygon pentagon2=new Polygon(new int[] {60,200,260,130,0},new int[]{260,260,120,0,120},5);
-            AffineTransform old = g2.getTransform();
-            Rectangle rec= new Rectangle(50,50);
+
+
 
             switch(whichTransform){
                 case 0:
