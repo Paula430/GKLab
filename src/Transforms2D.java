@@ -15,84 +15,51 @@ public class Transforms2D extends JPanel  {
 
         protected void paintComponent(Graphics g) {
             super.paintComponent(g);
-            g.setColor(Color.WHITE);
-
+            g.setColor(Color.BLUE);
 
             Graphics2D g2 = (Graphics2D)g;
-            //g2.translate(300,300);  // Moves (0,0) to the center of the display.
-
+            g2.translate(300,300);
 
             int whichTransform = transformSelect.getSelectedIndex();
 
-            // TODO Apply transforms here, depending on the value of whichTransform!
-            Polygon pentagon2=new Polygon(new int[] {60,200,260,130,0},new int[]{260,260,120,0,120},5);
-
-
-
             switch(whichTransform){
-                case 0:
-                    g2.fillPolygon(pentagon2);
-                    break;
+                case 0: break;
                 case 1:
-                    g2.translate(170,150);
-                    g2.fillPolygon(pentagon2);
+                    g2.scale(0.5,0.5);
                     break;
                 case 2:
-                    g2.rotate(Math.PI/8);
-                    g2.translate(250,-30);
-                    g2.scale(1.5,1.5);
-                    g2.translate(-50, -50);
-                    g2.fill(pentagon2);
+                    g2.rotate(Math.toRadians(45));
                     break;
                 case 3:
                 case 7:
-                    g2.translate(300,300);
+                    g2.scale(0.5,1);
                     g2.rotate(Math.toRadians(180));
-                    g2.scale(1,1.2);
-                    g2.translate(-120,-120);
-                    g2.fill(pentagon2);
                     break;
                 case 4:
-                    g2.scale(1.5,1.5);
-                    AffineTransform sat = AffineTransform.getTranslateInstance(50, 50);
-                    sat.shear(.5, 0);
-                    g2.transform(sat);
-                    g2.fill(pentagon2);
+                    g2.shear(0,0.35);
                     break;
                 case 5:
-                    g2.scale(1.5,0.5  );
-                    g2.translate(80,0);
-                    g2.fill(pentagon2);
+                    g2.scale(1,0.5);
+                    g2.translate(0,-450);
                     break;
                 case 6:
-                    g2.translate(300,300);
+                    g2.shear(0,-0.5);
                     g2.rotate(Math.toRadians(90));
-                    g2.translate(-200, -180);
-                    g2.scale(1.5,1.5);
-                    AffineTransform sat2 = AffineTransform.getTranslateInstance(50, 50);
-                    sat2.shear(.5, 0);
-                    g2.transform(sat2);
-                    g2.translate(-100,-100);
-                    g2.fill(pentagon2);
                     break;
                 case 8:
-                    g2.rotate(Math.PI/8);
-                    g2.scale(2,1);
-                    g2.translate(80,120);
-                    g2.fill(pentagon2);
+                    g2.rotate(Math.toRadians(45));
+                    g2.scale(1,0.5);
+                    g2.translate(0,300);
                     break;
                 case 9:
-                    g2.translate(300,300);
+                    g2.translate(140, 0);
+                    g2.shear(0, 0.25);
                     g2.rotate(Math.toRadians(180));
-                    g2.scale(1.5,1.5);
-                    g2.translate(-120,-120);
-                    AffineTransform sat3 = AffineTransform.getTranslateInstance(50, 50);
-                    sat3.shear(0, .5);
-                    g2.transform(sat3);
-                    g2.translate(-80,-100);
-                    g2.fill(pentagon2);
                     break;
             }
+
+            Polygon pentagon=new Polygon(new int[] {-100,100,160,0,-160}, new int[]{150,150,-30,-150,-30},5);
+            g2.fillPolygon(pentagon);
         }
     }
 
@@ -103,7 +70,7 @@ public class Transforms2D extends JPanel  {
     public Transforms2D() throws IOException {
         //pic = ImageIO.read(getClass().getClassLoader().getResource("shuttle.jpg"));
         display = new Display();
-        display.setBackground(Color.BLACK);
+        display.setBackground(Color.GRAY);
         display.setPreferredSize(new Dimension(600,600));
         transformSelect = new JComboBox<String>();
         transformSelect.addItem("None");
