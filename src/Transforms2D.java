@@ -19,6 +19,20 @@ public class Transforms2D extends JPanel  {
 
             Graphics2D g2 = (Graphics2D)g;
             g2.translate(300,300);
+            
+            int[] xpoints = new int[5];
+            int[] ypoints = new int[5];
+
+            for(int i = 1; i <= 5; i++)
+            {
+                xpoints[i-1] = (int) (150*Math.cos((2*Math.PI/5)*i));
+            }
+
+            for(int i = 1; i <= 5; i++)
+            {
+                ypoints[i-1] = (int) (150*Math.sin((2*Math.PI/5)*i));
+            }
+
 
             int whichTransform = transformSelect.getSelectedIndex();
 
@@ -60,19 +74,7 @@ public class Transforms2D extends JPanel  {
                     break;
             }
 
-            int[] xpoints = new int[5];
-            int[] ypoints = new int[5];
-
-            for(int i = 1; i < 6; i++)
-            {
-                xpoints[i-1] = (int) (150*Math.cos((2*Math.PI/5)*i));
-            }
-
-            for(int i = 1; i < 6; i++)
-            {
-                ypoints[i-1] = (int) (150*Math.sin((2*Math.PI/5)*i));
-            }
-
+           
             Polygon pentagon = new Polygon(xpoints, ypoints, 5);
             g2.rotate(Math.toRadians(-17));
             g2.fillPolygon(pentagon);
