@@ -23,8 +23,10 @@ public class Transforms2D extends JPanel  {
             int whichTransform = transformSelect.getSelectedIndex();
 
             switch(whichTransform){
-                case 0: break;
+                case 0:
+                    break;
                 case 1:
+
                     g2.scale(0.5,0.5);
                     break;
                 case 2:
@@ -58,8 +60,32 @@ public class Transforms2D extends JPanel  {
                     break;
             }
 
-            Polygon pentagon=new Polygon(new int[] {-100,100,160,0,-160}, new int[]{150,150,-30,-150,-30},5);
+            int[] xpoints = new int[5];
+            int[] ypoints = new int[5];
+
+            for(int i = 1; i < 6; i++)
+            {
+                xpoints[i-1] = (int) (150*Math.cos((2*Math.PI/5)*i));
+            }
+
+            for(int i = 1; i < 6; i++)
+            {
+                ypoints[i-1] = (int) (150*Math.sin((2*Math.PI/5)*i));
+            }
+
+            Polygon pentagon = new Polygon(xpoints, ypoints, 5);
+            g2.rotate(Math.toRadians(-17));
             g2.fillPolygon(pentagon);
+
+
+
+
+
+
+
+
+           //Polygon pentagon=new Polygon(new int[] {-100,100,160,0,-160}, new int[]{150,150,-30,-150,-30},5);
+            //g2.fillPolygon(pentagon);
         }
     }
 
