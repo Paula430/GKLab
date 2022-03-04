@@ -40,7 +40,6 @@ public class Transforms2D extends JPanel  {
                 case 0:
                     break;
                 case 1:
-
                     g2.scale(0.5,0.5);
                     break;
                 case 2:
@@ -80,14 +79,6 @@ public class Transforms2D extends JPanel  {
             g2.fillPolygon(pentagon);
 
 
-
-
-
-
-
-
-           //Polygon pentagon=new Polygon(new int[] {-100,100,160,0,-160}, new int[]{150,150,-30,-150,-30},5);
-            //g2.fillPolygon(pentagon);
         }
     }
 
