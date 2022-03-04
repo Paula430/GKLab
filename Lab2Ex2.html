@@ -2,10 +2,15 @@
 <html>
   <head>
     <meta charset="UTF-8" />
-    <title>CPSC 424, Lab 2, Exercise 1</title>
+    <title>CS424, Lab 2, Exercise 2</title>
     <style>
       body {
         background-color: #dddddd;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        -o-user-select: none;
+        user-select: none;
       }
       canvas {
         background-color: white;
@@ -21,120 +26,116 @@
 
       var canvas;
       var graphics;
-      var pixelSize;
+      PentagonButton = document.querySelector("#button1");
 
-      function draw() {
-        //head
-        graphics.beginPath();
-        graphics.arc(300, 300, 200, 0, 360);
-        graphics.fillStyle = "rgb(252, 3, 28)";
-        graphics.fill();
-        graphics.closePath();
-
-        //eyes
-        graphics.beginPath();
-        graphics.arc(220, 230, 40, 0, 360);
-        graphics.arc(380, 230, 40, 0, 360);
-        graphics.fillStyle = "rgb(255, 255, 255)";
-        graphics.fill();
-        graphics.closePath();
-
-        graphics.beginPath();
-        graphics.arc(220, 230, 25, 0, 360);
-        graphics.arc(380, 230, 25, 0, 360);
-        graphics.fillStyle = "rgb(0, 0, 0)";
-        graphics.fill();
-        graphics.closePath();
-
-        graphics.beginPath();
-        graphics.arc(210, 225, 10, 0, 360);
-        graphics.arc(370, 225, 10, 0, 360);
-        graphics.fillStyle = "rgb(255, 255, 255)";
-        graphics.fill();
-        graphics.closePath();
-
-        //mouth
-        graphics.beginPath();
-        graphics.fillStyle = "rgb(0, 0, 0)";
-        graphics.moveTo(220, 400);
-        graphics.bezierCurveTo(220, 410, 400, 410, 400, 400);
-        graphics.moveTo(220, 400);
-        graphics.bezierCurveTo(220, 450, 400, 450, 400, 400);
-        graphics.fill();
-        graphics.moveTo(230, 390);
-        graphics.quadraticCurveTo(240, 420, 215, 420);
-        graphics.moveTo(321, 245);
-
-        // // graphics.bezierCurveTo(319.5, 250, 319.5, 250, 323.5, 252);
-        graphics.stroke();
-
-        //teeth
+      function randomColorString() {
+        var r = Math.floor(256 * Math.random());
+        var g = Math.floor(256 * Math.random());
+        var b = Math.floor(256 * Math.random());
+        return "rgb(" + r + "," + g + "," + b + ")";
       }
 
-      /**
-       * Sets up a transformation in the graphic to right, and y-values in the range
-       * from bottom to top.  If preserveAspect is true, then one of the ranges
-       * will be increased, if necessary, to account for the aspect ratio of the
-       * canvas.  This function sets the global variable pixelsize to be the
-       * size of a pixel in the new coordinate system.  (If preseverAspect is
-       * true, pixelSize is the maximum of its horizontal and vertical sizes.)
-       */
-      function applyWindowToViewportTransformation(
-        left,
-        right,
-        bottom,
-        top,
-        preserveAspect
-      ) {
-        var displayAspect, windowAspect;
-        var excess;
-        var pixelwidth, pixelheight;
-        if (preserveAspect) {
-          // Adjust the limits to match the aspect ratio of the drawing area.
-          displayAspect = Math.abs(canvas.height / canvas.width);
-          windowAspect = Math.abs((top - bottom) / (right - left));
-          if (displayAspect > windowAspect) {
-            // Expand the viewport vertically.
-            excess = (top - bottom) * (displayAspect / windowAspect - 1);
-            top = top + excess / 2;
-            bottom = bottom - excess / 2;
-          } else if (displayAspect < windowAspect) {
-            // Expand the viewport vertically.
-            excess = (right - left) * (windowAspect / displayAspect - 1);
-            right = right + excess / 2;
-            left = left - excess / 2;
-          }
-        }
-        graphics.scale(
-          canvas.width / (right - left),
-          canvas.height / (bottom - top)
-        );
-        graphics.translate(-left, -top);
-        pixelwidth = Math.abs((right - left) / canvas.width);
-        pixelheight = Math.abs((bottom - top) / canvas.height);
-        pixelSize = Math.max(pixelwidth, pixelheight);
-      } // end of applyWindowToViewportTransformation()
+      function installMouseHandler() {
+        var dragging = false;
+        var startX, startY;
+        var colorChoice;
+        var FigureChoice;
 
-      /**
-       * This function can be called to add a collection of extra drawing function to
-       * a graphics context, to make it easier to draw basic shapes with that context.
-       * The parameter, graphics, must be a canvas 2d graphics context.
-       *
-       * The following new functions are added to the graphics context:
-       *
-       *    graphics.strokeLine(x1,y1,x2,y2) -- stroke the line from (x1,y1) to (x2,y2).
-       *    graphics.fillCircle(x,y,r) -- fill the circle with center (x,y) and radius r.
-       *    graphics.strokeCircle(x,y,r) -- stroke the circle.
-       *    graphics.fillOval(x,y,r1,r2) -- fill oval with center (x,y) and radii r1 and r2.
-       *    graphics.stokeOval(x,y,r1,r2) -- stroke the oval
-       *    graphics.fillPoly(x1,y1,x2,y2,...) -- fill polygon with vertices (x1,y1), (x2,y2), ...
-       *    graphics.strokePoly(x1,y1,x2,y2,...) -- stroke the polygon.
-       *    graphics.getRGB(x,y) -- returns the color components of pixel at (x,y) as an array of
-       *         four integers in the range 0 to 255, in the order red, green, blue, alpha.
-       *
-       * (Note that "this" in a function that is called as a member of an object refers to that
-       * object.  Here, this will refer to the graphics context.)
-       */
+        function doClear() {
+          graphics.clearRect(0, 0, 800, 600);
+        }
+
+        function doMouseDown(evt) {
+          if (dragging) {
+            return;
+          }
+          if (evt.button != 0) {
+            return;
+          }
+          var x, y;
+          var r = canvas.getBoundingClientRect();
+          x = Math.round(evt.clientX - r.left);
+          y = Math.round(evt.clientY - r.top);
+          dragging = true;
+          if (dragging) {
+            startX = prevX = x;
+            startY = prevY = y;
+            document.addEventListener("mousemove", doMouseMove, false);
+            document.addEventListener("mouseup", doMouseUp, false);
+          }
+          colorChoice = Number(document.getElementById("colorChoice").value);
+          FigureChoice = document.querySelector("#FigureChoice").value;
+          document.getElementById("ClearButton").onclick = doClear;
+        }
+
+        function doMouseMove(evt) {
+          if (!dragging) {
+            return;
+          }
+          var x, y;
+          var r = canvas.getBoundingClientRect();
+          x = Math.round(evt.clientX - r.left);
+          y = Math.round(evt.clientY - r.top);
+
+          if (Math.abs(x - prevX) + Math.abs(y - prevY) < 3) {
+            return;
+          }
+
+          if (colorChoice == 0) {
+            graphics.fillStyle = randomColorString();
+          } else if (colorChoice == 1) {
+            graphics.fillStyle = "red";
+          } else if (colorChoice == 2) {
+            graphics.fillStyle = "green";
+          } else if (colorChoice == 3) {
+            graphics.fillStyle = "blue";
+          } else if (colorChoice == 4) {
+            graphics.fillStyle = "pink";
+          }
+
+          if (FigureChoice == 0) {
+            graphics.fillRect(x - 20, y - 20, 40, 40);
+            graphics.strokeRect(x - 20, y - 20, 40, 40);
+          } else if (FigureChoice == 1) {
+            var numberOfSides = 5,
+              size = 25,
+              Xcenter = x,
+              Ycenter = y;
+
+            graphics.beginPath();
+
+            graphics.moveTo(
+              Xcenter + size * Math.cos(0),
+              Ycenter + size * Math.sin(0)
+            );
+
+            for (var i = 1; i <= numberOfSides; i += 1) {
+              graphics.lineTo(
+                Xcenter + size * Math.cos((i * 2 * Math.PI) / numberOfSides),
+                Ycenter + size * Math.sin((i * 2 * Math.PI) / numberOfSides)
+              );
+            }
+
+            graphics.stroke();
+            graphics.fill();
+          }
+
+          prevX = x;
+          prevY = y;
+        }
+
+        function doMouseUp(evt) {
+          if (!dragging) {
+            return;
+          }
+          dragging = false;
+          document.removeEventListener("mousemove", doMouseMove, false);
+          document.removeEventListener("mouseup", doMouseMove, false);
+        }
+
+        canvas.addEventListener("mousedown", doMouseDown, false);
+      }
+
       function addGraphicsContextExtras(graphics) {
         graphics.strokeLine = function (x1, y1, x2, y2) {
           this.beginPath();
@@ -199,38 +200,50 @@
           var color = this.getImageData(x, y, 1, 1);
           return color.data;
         };
-      } // end of addGraphicsContextExtras()
-
-      /**
-       * The init() funciton is called after the page has been
-       * loaded.  It initializes the canvas and graphics variables.
-       * It calles addGraphicsContextExtras(graphics) to add the extra
-       * drawing functions to the graphics context, and it calls draw()
-       * to draw on the canvas.
-       */
+      }
       function init() {
         try {
           canvas = document.getElementById("canvas");
           graphics = canvas.getContext("2d");
         } catch (e) {
           document.getElementById("canvasholder").innerHTML =
-            "Canvas graphics is not supported.<br>" +
-            "An error occurred while initializing graphics.";
+            "<p>Canvas graphics is not supported.<br>" +
+            "An error occurred while initializing graphics.</p>";
+          return;
         }
         addGraphicsContextExtras(graphics);
-        draw();
+        installMouseHandler();
+        graphics.fillStyle = "white";
+        graphics.fillRect(0, 0, canvas.width, canvas.height);
       }
     </script>
   </head>
   <body onload="init()">
-    <h2>CS 424, Lab 2, Exercise 1</h2>
+    <h2>Lab 2, Exercise 2: Mousing</h2>
 
     <noscript>
       <p>JavaScript is required to use this page.</p>
     </noscript>
 
+    <p>
+      <b>Color:</b>
+      <select id="colorChoice">
+        <option value="0">Random</option>
+        <option value="1">Red</option>
+        <option value="2">Green</option>
+        <option value="3">Blue</option>
+        <option value="4">Pink</option>
+      </select>
+      <b>Figure:</b>
+      <select id="FigureChoice">
+        <option value="0">Square</option>
+        <option value="1">Pentagon</option>
+      </select>
+      <button id="ClearButton">Clear</button>
+    </p>
+
     <div id="canvasholder">
-      <canvas id="canvas" width="600" height="600">
+      <canvas id="canvas" width="800" height="600">
         Canvas not supported.
       </canvas>
     </div>
