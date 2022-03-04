@@ -26,7 +26,6 @@
 
       var canvas;
       var graphics;
-      PentagonButton = document.querySelector("#button1");
 
       function randomColorString() {
         var r = Math.floor(256 * Math.random());
@@ -40,6 +39,7 @@
         var startX, startY;
         var colorChoice;
         var FigureChoice;
+        var prevX, prevY;
 
         function doClear() {
           graphics.clearRect(0, 0, 800, 600);
