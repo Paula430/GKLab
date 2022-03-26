@@ -1,0 +1,59 @@
+<?xml version="1.0"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+    "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg"
+    xmlns:xlink="http://www.w3.org/1999/xlink"
+    width="800px" height="600px"
+    viewBox="0 0 8 6"
+    preserveAspectRatio="xMidYMid">
+
+<defs>
+    <g id="pentagon">
+    <animateTransform attributeName="transform"
+                          attributeType="XML"
+                          type="rotate"
+                          from="0 0.6 0.56"
+                          to="360 0.6 0.56"
+                          dur="6"
+                          repeatCount="indefinite"/>
+
+     <polygon stroke="black" stroke-width="0.03"
+             points="0.6 0.13,1.1 0.48,0.92 1.0,0.3 1.0, 0.13 0.48" 
+             fill="white" />
+        
+        <line x1="0.6" y1="0.13" x2="0.6" y2="0.57" stroke-width="0.02" stroke="black" /> 
+        <line x1="1.1" y1="0.48" x2="0.6" y2="0.57" stroke-width="0.02" stroke="black" /> 
+        <line x1="0.92" y1="1.0" x2="0.6" y2="0.57" stroke-width="0.02" stroke="black" /> 
+        <line x1="0.3" y1="1.0" x2="0.6" y2="0.57" stroke-width="0.02" stroke="black" /> 
+        <line x1="0.13" y1="0.48" x2="0.6" y2="0.57" stroke-width="0.02" stroke="black" /> 
+    </g>
+</defs>
+
+<defs> 
+    <g id="redLine">
+    <line x1="4" y1="2.5" x2="7.5" y2="2.5" stroke-width="0.15" stroke="red" transform="rotate(17)"/>
+    </g>
+</defs>
+
+
+<use xlink:href="#pentagon" transform="translate(2.55,2.98)"/>
+<use xlink:href="#pentagon" transform="translate(5.8,3.95)"/>
+
+<use xlink:href="#redLine"/>
+<polygon points="4.4,5.7 4.7,4 5.1,5.7" fill="blue"/>
+
+<use xlink:href="#pentagon" transform="scale(0.5,0.5) translate(2.5,3)"/>
+<use xlink:href="#pentagon" transform="scale(0.5,0.5) translate(5.8,4)"/>
+<use xlink:href="#redLine" transform="scale(0.5,0.5)"/>
+<polygon points="4.4,5.7 4.7,4 5.1,5.7" fill="rgb(128,0,128)" transform="scale(0.5,0.5)"/>
+
+<use xlink:href="#pentagon" transform="translate(4.76,1.4) scale(0.3,0.3)"/>
+<use xlink:href="#pentagon" transform="translate(5.73,1.7) scale(0.3,0.3)"/>
+<use xlink:href="#redLine" transform="translate(4,0.5) scale(0.3,0.3)"/>
+<polygon points="4.4,5.7 4.7,4 5.1,5.7" fill="rgb(0,128,0)" transform="translate(4,0.5) scale(0.3,0.3)"/>
+
+<rect x="0" y="0" width="8" height="6"
+    stroke="black" fill="none" stroke-width="0.1"/>
+</svg>
+
+
