@@ -1,6 +1,3 @@
-
-
-
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
@@ -16,9 +13,9 @@ public class SubroutineHierarchy extends JPanel {
 
 	public static void main(String[] args) {
 		JFrame window = new JFrame("Subroutine Hierarchy");
-		window.setContentPane( new SubroutineHierarchy() );
+		window.setContentPane(new SubroutineHierarchy());
 		window.pack();
-		window.setLocation(100,60);
+		window.setLocation(100, 60);
 		window.setResizable(false);
 		window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		window.setVisible(true);
@@ -43,38 +40,73 @@ public class SubroutineHierarchy extends JPanel {
 	// TODO:  Define any other necessary state variables.
 
 	/**
-	 *  Responsible for drawing the entire scene.  The display is filled with the background
-	 *  color before this method is called.
+	 * Responsible for drawing the entire scene.  The display is filled with the background
+	 * color before this method is called.
 	 */
 	private void drawWorld(Graphics2D g2) {
 
 		// TODO: Draw the content of the scene.
-		rotatingRect(g2);  // (DELETE THIS EXAMPLE)
+		rotatingPolygon(g2);
+		rotatingPolygon(g2);
+		filledTriangle(g2,Color.blue);
+		filledRect(g2);
 
-	} // end drawWorld()
-	
-	
-	/**
-	 * This method is called before each frame is drawn.
-	 */
+
+
+
+	}
+
 	private void updateFrame() {
 		frameNumber++;
 		// TODO: If other updates are needed for the next frame, do them here.
 	}
 
-    
+
 	// TODO: Define methods for drawing objects in the scene.
-	
+
 	private void rotatingRect(Graphics2D g2) { // (DELETE THIS EXAMPLE)
 		AffineTransform saveTransform = g2.getTransform();  // (It might be necessary to save/restore transform and color)
 		Color saveColor = g2.getColor();
-		g2.setColor( Color.RED );
-		g2.rotate( Math.toRadians( frameNumber*0.75 ));
-		g2.scale( 2, 2 );
+		g2.setColor(Color.RED);
+		g2.rotate(Math.toRadians(frameNumber * 0.75));
+		g2.scale(2, 2);
 		filledRect(g2);
 		g2.setColor(saveColor);
 		g2.setTransform(saveTransform);
 	}
+
+	private static void rotatingPolygon(Graphics2D g2) {
+		AffineTransform saveTransform = g2.getTransform();
+		int[] xpoints = new int[5];
+		int[] ypoints = new int[5];
+
+		for (int i = 1; i <= 5; i++) {
+			xpoints[i - 1] = (int) (150 * Math.cos((2 * Math.PI / 5) * i));
+		}
+
+		for (int i = 1; i <= 5; i++) {
+			ypoints[i - 1] = (int) (150 * Math.sin((2 * Math.PI / 5) * i));
+		}
+
+		Polygon pentagon = new Polygon(xpoints, ypoints, 5);
+		Color saveColor = g2.getColor();
+
+		g2.setColor(Color.BLACK);
+		g2.setStroke(new BasicStroke(4));
+		g2.rotate(Math.toRadians(18));
+		g2.scale(0.015, 0.015);
+
+
+		for (int i = 1; i <= 5; i++) {
+			g2.drawLine(xpoints[i - 1], ypoints[i - 1], 0, 0);
+		}
+
+		g2.draw(pentagon);
+		g2.setColor(saveColor);
+		g2.setTransform(saveTransform);
+
+	}
+
 
 
 	//------------------- Some methods for drawing basic shapes. ----------------
@@ -88,7 +120,11 @@ public class SubroutineHierarchy extends JPanel {
 	}
 
 	private static void filledRect(Graphics2D g2) { // Fills a square, size = 1, center = (0,0)
+		g2.setColor(Color.RED);
+		g2.rotate(Math.toRadians(-18));
+		g2.scale(6,0.2);
 		g2.fill(new Rectangle2D.Double(-0.5,-0.5,1,1));
+
 	}
 
 	private static void circle(Graphics2D g2) { // Strokes a circle, diameter = 1, center = (0,0)
@@ -99,12 +135,14 @@ public class SubroutineHierarchy extends JPanel {
 		g2.draw(new Ellipse2D.Double(-0.5,-0.5,1,1));
 	}
 	
-	private static void filledTriangle(Graphics2D g2) { // width = 1, height = 1, center of base is at (0,0);
-		Path2D path = new Path2D.Double();  
+	private static void filledTriangle(Graphics2D g2,Color color) { // width = 1, height = 1, center of base is at (0,0);
+		Path2D path = new Path2D.Double();
+		g2.setColor(color);
 		path.moveTo(-0.5,0);
 		path.lineTo(0.5,0);
 		path.lineTo(0,1);
 		path.closePath();
+		g2.scale(0.5,1.4);
 		g2.fill(path);
 	}
 
