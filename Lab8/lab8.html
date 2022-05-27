@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<head>
+<meta charset="UTF-8">
+<title>CS 424 Lab 9</title>
+<script src="three.js/build/three.js"></script>
+<script src="resources/OrbitControls.js"></script>
+<script src="three.js/loaders/OBJLoader.js"></script>
+<script src="three.js/loaders/MTLLoader.js"></script>
+<script src="three.js/deprecated/LegacyJSONLoader.js"></script>
+<script src="three.js/loaders/GLTFLoader.js"></script>
+<script src="three.js/loaders/DRACOLoader.js"></script>
+<script>
+
+"use strict";
+
+var canvas, renderer, scene, camera; // Standard three.js requirements.
+
+var controls;  // An OrbitControls object that is used to implement
+               // rotation of the scene using the mouse.  (It actually rotates
+               // the camera around the scene.)
+
+var animating = false;  // Set to true when an animation is in progress.
+var frameNumber = 0;  // Frame number is advanced by 1 for each frame while animating.
+
+var floor,ceiling,middle,pole1,pole2,pole3,pole4,pole5,pole6,horse1,horse2,horse3,horse4,horse5,horse6;  // A temporary animated object.  DELETE IT.
+
+
+/**
+ *  The render function draws the scene.
+ */
+function render() {
+    renderer.render(scene, camera);
+}
+
+
+/**
+ * This function is called by the init() method to create the world. 
+ */
+function createWorld() {
+    
+    renderer.setClearColor("black"); // Background color for scene.
+    scene = new THREE.Scene();
+    
+    // ------------------- Make a camera with viewpoint light ----------------------
+    
+    camera = new THREE.PerspectiveCamera(30, canvas.width/canvas.height, 0.1, 100);
+    camera.position.z = 30;
+    var light;  // A light shining from the direction of the camera; moves with the camera.
+    light = new THREE.DirectionalLight();
+    light.position.set(0,0,1);
+    camera.add(light);
+    scene.add(camera);
+    
+    //------------------- Create the scene's visible objects ----------------------
+    
+    floor =  new THREE.Mesh(  // DELETE THIS !
+        new THREE.CylinderGeometry(12,12,0.3,5,1),
+        new THREE.MeshPhongMaterial({
+            color: 0x66BBFF,
+            specular: 0x222222,
+            shininess: 16,
+            shading: THREE.FlatShading
+        })
+    );
+
+    floor.rotation.y = Math.PI/12;
+    scene.add(floor);
+
+   var texture = new THREE.TextureLoader().load('resources/earth.jpg');
+   var ball = new THREE.SphereGeometry( 4, 50, 50 );
+   var material = new THREE.MeshBasicMaterial( {color: "white" ,map: texture });
+   middle = new THREE.Mesh( ball, material );
+   middle.position.y=3.875;
+   scene.add( middle );
+
+   pole1 = new THREE.Mesh(
+           new THREE.CylinderGeometry(0.18,0.18,8.2,30,1),
+           new THREE.MeshPhongMaterial
+           ({color: 0xD14CFF,
+              specular: 0x222222,
+              shininess: 10,
+              shading: THREE.FlatShading
+           })
+   );
+   pole1.rotation.y = Math.PI/12;
+   pole2=pole1.clone();
+   pole3=pole1.clone();
+   pole4=pole1.clone();
+   pole5=pole1.clone();
+   pole6=pole1.clone();
+
+ceiling=new THREE.Mesh(  // DELETE THIS !
+        new THREE.CylinderGeometry(0.1,12,3,30,1),
+        new THREE.MeshPhongMaterial({
+           color: 0x66BBFF,
+           specular: 0x222222,
+           shininess: 10,
+           shading: THREE.FlatShading
+        })
+);
+   ceiling.position.y=9;
+   floor.add(ceiling)
+   var loader = new THREE.LegacyJSONLoader();
+   loader.load( 'resources/horse.js', function( geometry ) {
+      horse1 = new THREE.Mesh( geometry, new THREE.MeshPhongMaterial({color: 0xCCFF99}));
+      horse2 = new THREE.Mesh( geometry, new THREE.MeshPhongMaterial({color: 0xA0A0A0}));
+      horse3 = new THREE.Mesh( geometry, new THREE.MeshPhongMaterial({color: 0xFEC101}));
+      horse4 = new THREE.Mesh( geometry, new THREE.MeshPhongMaterial({color: 0xFFFFFF}));
+      horse5 = new THREE.Mesh( geometry, new THREE.MeshPhongMaterial({color: 0x9999FF}));
+      horse6 = new THREE.Mesh( geometry, new THREE.MeshPhongMaterial({color: 0x0C00FF}));
+      horse1.scale.set( 0.025, 0.030, 0.028  );
+      horse2.scale.set( 0.025, 0.030, 0.028  );
+      horse3.scale.set(0.025, 0.030, 0.028  );
+      horse4.scale.set(0.025, 0.030, 0.028  );
+      horse5.scale.set(0.025, 0.030, 0.028  );
+      horse6.scale.set( 0.025, 0.030, 0.028  );
+      
+
+      horse1.rotation.y = Math.PI;
+      horse1.position.set(0,-3,0);
+      pole1.add( horse1 );
+      pole1.position.set(9,3.9,-2);
+
+      horse2.rotation.y = Math.PI *2 ;
+      horse2.position.set(0,-3,0);
+      pole2.add( horse2 );
+      pole2.position.set(-9,3.9,2);
+
+      horse3.rotation.y = Math.PI/4 ;
+      horse3.position.set(0,-3,0);
+      pole3.add( horse3 );
+      pole3.position.set(-3,3.9,8.5);
+
+      horse4.rotation.y = Math.PI /-1.5;
+      horse4.position.set(0,-3,0);
+      pole4.add( horse4 );
+      pole4.position.set(3,3.9,-8.5);
+
+      horse5.rotation.y = Math.PI /1.8 ;
+      horse5.position.set(0,-3,0);
+      pole5.add( horse5 );
+      pole5.position.set(6,3.9,7);
+
+      horse6.rotation.y = Math.PI /0.7;
+      horse6.position.set(0,-3,0);
+      horse6.add( horse6 );
+      horse6.position.set(-6,3.9,-7);
+
+   } );
+
+   floor.add(pole1);
+   floor.add(pole2);
+   floor.add(pole3);
+   floor.add(pole4);
+   floor.add(pole5);
+   floor.add(pole6);
+ 
+   
+    
+} // end function createWorld()
+
+
+/**
+ *  This function is called once for each frame of the animation, before
+ *  the render() function is called for that frame.  It updates any
+ *  animated properties.  The value of the global variable frameNumber
+ *  is incrementd 1 before this function is called.
+ */
+function updateForFrame() {
+    
+    // Update size and rotation of tempObject.  DELETE THIS!
+    var loopFrame = frameNumber % 240;
+    if (loopFrame > 120) {
+        loopFrame = 240 - loopFrame;
+    }
+    var scaleFactor = 1 + loopFrame/120;
+ 
+
+    floor.rotation.y += 0.01;
+    ceiling.rotation.y += 0.01;
+
+    
+}
+
+
+/* ---------------------------- MOUSE AND ANIMATION SUPPORT ------------------
+
+/**
+ *  This page uses THREE.OrbitControls to let the user use the mouse to rotate
+ *  the view.  OrbitControls are designed to be used during an animation, where
+ *  the rotation is updated as part of preparing for the next frame.  The scene
+ *  is not automatically updated just because the user drags the mouse.  To get
+ *  the rotation to work without animation, I add another mouse listener to the
+ *  canvas, just to call the render() function when the user drags the mouse.
+ *  The same thing holds for touch events -- I call render for any mouse move
+ *  event with one touch.
+ */
+function installOrbitControls() {
+    controls = new THREE.OrbitControls(camera,canvas);
+    controls.noPan = true; 
+    controls.noZoom = true;
+    controls.staticMoving = true;
+    function move() {
+        controls.update();
+        if (! animating) {
+            render();
+        }
+    }
+    function down() {
+        document.addEventListener("mousemove", move, false);
+    }
+    function up() {
+        document.removeEventListener("mousemove", move, false);
+    }
+    function touch(event) {
+        if (event.touches.length == 1) {
+            move();
+        }
+    }
+    canvas.addEventListener("mousedown", down, false);
+    canvas.addEventListener("touchmove", touch, false);
+}
+
+/*  Called when user changes setting of the Animate checkbox. */
+function doAnimateCheckbox() {
+   var run = document.getElementById("animateCheckbox").checked;
+   if (run != animating) {
+       animating = run;
+       if (animating) {
+           requestAnimationFrame(doFrame);
+       }
+   }
+}
+
+/*  Drives the animation, called by system through requestAnimationFrame() */
+function doFrame() {
+    if (animating) {
+        frameNumber++;
+        updateForFrame();
+        render();
+        requestAnimationFrame(doFrame);
+    }
+}
+
+/*----------------------------- INITIALIZATION ----------------------------------------
+
+/**
+ *  This function is called by the onload event so it will run after the
+ *  page has loaded.  It creates the renderer, canvas, and scene objects,
+ *  calls createWorld() to add objects to the scene, and renders the
+ *  initial view of the scene.  If an error occurs, it is reported.
+ */
+function init() {
+    try {
+        canvas = document.getElementById("glcanvas");
+        renderer = new THREE.WebGLRenderer({
+            canvas: canvas,
+            antialias: true,
+            alpha: false
+        });
+    }
+    catch (e) {
+        document.getElementById("message").innerHTML="<b>Sorry, an error occurred:<br>" +
+                e + "</b>";
+        return;
+    }
+    document.getElementById("animateCheckbox").checked = false;
+    document.getElementById("animateCheckbox").onchange = doAnimateCheckbox;
+    createWorld();
+    installOrbitControls();
+    render();
+}
+
+</script>
+</head>
+<body onload="init()">
+
+<h2>Three.js Modeling Demo: Merry-Go-Round</h2>
+
+<noscript>
+   <p style="color: #AA0000; font-weight: bold">Sorry, but this page requires JavaScript!</p>
+</noscript>
+
+<p style="color:#AA0000; font-weight: bold" id="message">
+</p>
+
+<p>
+   <label><input type="checkbox" id="animateCheckbox"><b>Animate</b></label>
+   <b style="margin-left:50px">Use the mouse to rotate the model.</b>
+</p>
+
+<div id="canvas-holder" style="float:left; border: thin solid black; background-color: white">
+   <canvas width=1200 height=600 id="glcanvas"></canvas>
+</div>
+
+</body>
+</html>
